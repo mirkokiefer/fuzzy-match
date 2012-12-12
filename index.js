@@ -25,28 +25,29 @@ var groupAndDecompose = function(diff, before, decompose) {
   return {equal: equal, deleted: deleted, added: added}
 }
 
-var matchModifiedValues = function(deleted, added) {
+var matchModifiedValues = function(deleted, added, minRatio) {
   var matches = []
-  deleted.forEach(function(entryBefore) {
-    var takeBestEqualRatio = function(bestCandidate, newCandidate) {
-      var diff = arrayDiff(entryBefore.value, newCandidate.value)
+  added.forEach(function(entryAfter) {
+    var takeBestEqualRatio = function(bestCandidate, entryBefore) {
+      var diff = arrayDiff(entryBefore.value, entryAfter.value)
       var sumEquals = function(previous, each) { return each[0] == '=' ? previous+1 : previous }
       var equalRatio = diff.reduce(sumEquals, 0) / diff.length
-      return equalRatio > bestCandidate.ratio ? {ratio: equalRatio, entry: newCandidate} : bestCandidate
+      return equalRatio > bestCandidate.ratio ? {ratio: equalRatio, entry: entryBefore} : bestCandidate
     }
-    var bestCandidate = added.reduce(takeBestEqualRatio, {ratio: 0})
-    bestCandidate.entry.id = entryBefore.id
-    matches.push(bestCandidate.entry)
+    var bestCandidate = deleted.reduce(takeBestEqualRatio, {ratio: minRatio, entry:{}})
+    entryAfter.id = bestCandidate.entry.id
+    matches.push(entryAfter)
   })
   return matches
 }
 
 var match = function(before, after, options) {
   options = options || {}
+  var minRatio = options.minRatio || 0.5
   var beforeValues = _.pluck(before, 'value')
   var diff = arrayDiff(beforeValues, after)
   var grouped = groupAndDecompose(diff, before, options.decompose)
-  var fuzzyMatches = matchModifiedValues(grouped.deleted, grouped.added)
+  var fuzzyMatches = matchModifiedValues(grouped.deleted, grouped.added, minRatio)
     .map(function(each) { return {value:after[each.pos], id: each.id, pos: each.pos }})
   return grouped.equal.concat(fuzzyMatches)
     .sort(function(a, b) { return a.pos > b.pos })

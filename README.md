@@ -1,5 +1,6 @@
 #fuzzy-id
-Match edited strings by similarity.
+Match edited strings by similarity.  
+After having matched the strings the output can be used to do 3-way merges with [id-diff](https://github.com/mirkok/id-diff) and [id-merge](https://github.com/mirkok/id-merge).
 
 ``` js
 var before = [
@@ -32,4 +33,4 @@ var result = match(origin, modified, {decompose: decompose})
   {id: undefined, value: 'This one should not match'},
   {id: 4, value: 'And finally a last sentence'}
 ]
-```
+``

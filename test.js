@@ -27,4 +27,7 @@ var decompose = function(value) {
   return value.split(' ')
 }
 
-console.log(match(origin, modified, {decompose: decompose}))
+it('should identify all changed strings', function() {
+  var result = match(origin, modified, {decompose: decompose})
+  assert.deepEqual(result, expected)
+})

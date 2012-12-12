@@ -2,7 +2,7 @@
 var _ = require('underscore')
 var arrayDiff = require('array-diff')()
 
-var groupDiff = function(diff, before, decompose) {
+var groupAndDecompose = function(diff, before, decompose) {
   var deleted = []
   var added = []
   var equal = []
@@ -25,7 +25,7 @@ var groupDiff = function(diff, before, decompose) {
   return {equal: equal, deleted: deleted, added: added}
 }
 
-var matchModifiedValues = function(deleted, added, before, after) {
+var matchModifiedValues = function(deleted, added) {
   var matches = []
   deleted.forEach(function(entryBefore) {
     var takeBestEqualRatio = function(bestCandidate, newCandidate) {
@@ -45,9 +45,12 @@ var match = function(before, after, options) {
   options = options || {}
   var beforeValues = _.pluck(before, 'value')
   var diff = arrayDiff(beforeValues, after)
-  var grouped = groupDiff(diff, before, options.decompose)
-  var fuzzyMatches = matchModifiedValues(grouped.deleted, grouped.added, before, after)
+  var grouped = groupAndDecompose(diff, before, options.decompose)
+  var fuzzyMatches = matchModifiedValues(grouped.deleted, grouped.added)
+    .map(function(each) { return {value:after[each.pos], id: each.id, pos: each.pos }})
   return grouped.equal.concat(fuzzyMatches)
+    .sort(function(a, b) { return a.pos > b.pos })
+    .map(function(each) { return {id: each.id, value: each.value} })
 }
 
 module.exports = match

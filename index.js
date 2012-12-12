@@ -10,7 +10,7 @@ var groupDiff = function(diff, before, decompose) {
   diff.forEach(function(each) {
     switch (each[0]) {
       case '=':
-        equal.push({id: before[indexBefore].id, value: each[1]})
+        equal.push({id: before[indexBefore].id, value: each[1], pos: indexAfter})
         indexBefore++; indexAfter++
         break
       case '-':
@@ -18,7 +18,7 @@ var groupDiff = function(diff, before, decompose) {
         indexBefore++
         break
       case '+':
-        added.push({index: indexAfter, value: decompose(each[1])})
+        added.push({value: decompose(each[1]), pos: indexAfter})
         indexAfter++
     }
   })
@@ -35,10 +35,8 @@ var matchModifiedValues = function(deleted, added, before, after) {
       return equalRatio > bestCandidate.ratio ? {ratio: equalRatio, entry: newCandidate} : bestCandidate
     }
     var bestCandidate = added.reduce(takeBestEqualRatio, {ratio: 0})
-    matches.push({
-      id: entryBefore.id,
-      value: after[bestCandidate.entry.index]
-    })
+    bestCandidate.entry.id = entryBefore.id
+    matches.push(bestCandidate.entry)
   })
   return matches
 }

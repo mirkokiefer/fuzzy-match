@@ -1,0 +1,16 @@
+{
+  "name": "fuzzy-id",
+  "version": "0.0.1",
+  "description": "fuzzy matching of IDs in arrays",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "repository": "",
+  "author": "Mirko Kiefer <mail@mirkokiefer.com>",
+  "license": "BSD",
+  "dependencies": {
+    "underscore": "~1.4.3",
+    "array-diff": "0.0.1"
+  }
+}

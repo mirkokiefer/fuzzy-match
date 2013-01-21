@@ -2,7 +2,7 @@
 var _ = require('underscore')
 var arrayDiff = require('array-diff')()
 
-var groupAndDecompose = function(diff, decompose) {
+var groupAndSplit = function(diff, split) {
   var deleted = []
   var added = []
   var equal = []
@@ -14,11 +14,11 @@ var groupAndDecompose = function(diff, decompose) {
         indexBefore++; indexAfter++
         break
       case '-':
-        deleted.push({before: indexBefore, value: decompose(each[1])})
+        deleted.push({before: indexBefore, value: split(each[1])})
         indexBefore++
         break
       case '+':
-        added.push({value: decompose(each[1]), pos: indexAfter})
+        added.push({value: split(each[1]), pos: indexAfter})
         indexAfter++
     }
   })
@@ -45,7 +45,7 @@ var match = function(before, after, options) {
   options = options || {}
   var minRatio = options.minRatio || 0.5
   var diff = arrayDiff(before, after)
-  var grouped = groupAndDecompose(diff, options.decompose)
+  var grouped = groupAndSplit(diff, options.split)
   var fuzzyMatches = matchModifiedValues(grouped.deleted, grouped.added, minRatio)
     .map(function(each) { return {value:after[each.pos], before: each.before, pos: each.pos }})
   return grouped.equal.concat(fuzzyMatches)

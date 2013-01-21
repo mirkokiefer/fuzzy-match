@@ -25,11 +25,11 @@ var expected = [
   {before: 3, value: 'And finally a last sentence'}
 ]
 
-var decompose = function(value) {
+var split = function(value) {
   return value.split(' ')
 }
 
 it('should identify all changed strings', function() {
-  var result = match(before, after, {decompose: decompose})
+  var result = match(before, after, {split: split})
   assert.deepEqual(result, expected)
 })

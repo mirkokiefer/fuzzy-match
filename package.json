@@ -4,7 +4,7 @@
   "description": "fuzzy matching of IDs in arrays",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "node_modules/.bin/mocha test.js"
   },
   "repository": "",
   "author": "Mirko Kiefer <mail@mirkokiefer.com>",
@@ -12,5 +12,8 @@
   "dependencies": {
     "underscore": "~1.4.3",
     "array-diff": "0.0.1"
+  },
+  "devDependencies": {
+    "mocha": "~1.8.1"
   }
 }

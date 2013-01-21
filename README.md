@@ -1,15 +1,15 @@
-#fuzzy-id
+#fuzzy-match
 Match edited strings (or other values) by similarity.
 
 The goal is to be able to do 3-way merges considering sentence/word movements in text.  
-After having matched the strings the output can be used to do these merges with [id-diff](https://github.com/mirkok/id-diff) and [id-merge](https://github.com/mirkok/id-merge).  
+After having matched the strings the output can be used to do these merges with [difftools](https://github.com/mirkok/difftools).  
 
 ``` js
 var before = [
-  {id: 1, value: 'Hello world'},
-  {id: 2, value: 'Node.js is really awesome'},
-  {id: 3, value: 'fuzzy-id allows you to match arrays by similarity'},
-  {id: 4, value: 'And finally a last sentence'}
+  'Hello world',
+  'Node.js is really awesome',
+  'fuzzy-id allows you to match arrays by similarity',
+  'And finally a last sentence'
 ]
 
 // we lost all IDs and strings were moved around:
@@ -22,17 +22,17 @@ var after = [
 ]
 
 // required function to decompose values into arrays for comparison:
-var decompose = function(value) {
+var split = function(value) {
   return value.split(' ')
 }
 
-var result = match(origin, modified, {decompose: decompose})
+var result = match(origin, modified, {split: split})
 // returns:
 [
-  {id: 1, value: 'Hello world'},
-  {id: 3, value: 'fuzzy-id allows you to match arrays by similarity - how great!'},
-  {id: 2, value: 'Node.js is awesome'},
-  {id: undefined, value: 'This one should not match'},
-  {id: 4, value: 'And finally a last sentence'}
+  {before: 0, value: 'Hello world'},
+  {before: 2, value: 'fuzzy-id allows you to match arrays by similarity - how great!'},
+  {before: 1, value: 'Node.js is awesome'},
+  {before: undefined, value: 'This one should not match'},
+  {before: 3, value: 'And finally a last sentence'}
 ]
-``
+```

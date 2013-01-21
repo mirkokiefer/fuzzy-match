@@ -1,6 +1,6 @@
 {
-  "name": "fuzzy-id",
-  "version": "0.0.1",
+  "name": "fuzzy-match",
+  "version": "0.1.0",
   "description": "fuzzy matching of IDs in arrays",
   "main": "index.js",
   "scripts": {
